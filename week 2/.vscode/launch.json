@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/MSI/OneDrive - student.newinti.edu.my/Semester 3/COS30008 (DATA STRUCTURES AND PATTERNS)/COS30008-Data-structure/week 2",
+      "program": "c:/Users/MSI/OneDrive - student.newinti.edu.my/Semester 3/COS30008 (DATA STRUCTURES AND PATTERNS)/COS30008-Data-structure/week 2/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,4 @@
-#ifndef TEMPERATURE_H
-#define TEMPERATURE_H
+#pragma once
 
 class Temperature
 {
@@ -21,4 +20,3 @@ public:
     double getTempCelsius() const;
 };
 
-#endif
