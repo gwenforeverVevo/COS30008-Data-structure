@@ -3,31 +3,29 @@
 
 using namespace std;
 
-int main()
-{
-
+int main() {
     Temperature temp;
-    temp.setTempKelvin(100);
+    temp.setTempKelvin(300);
 
-    cout << temp.getTempKelvin() << " degrees kelvin" << endl;
-    cout << temp.getTempFahrenheit() << " degrees fahrenheit" << endl;
-    cout << temp.getTempCelsius() << " degrees celsius" << endl;
-
-    cout << "---------------------------\n\n";
-
-    temp.setTempFahrenheit(-279.67);
-
-    cout << temp.getTempKelvin() << " degrees kelvin" << endl;
-    cout << temp.getTempFahrenheit() << " degrees fahrenheit" << endl;
-    cout << temp.getTempCelsius() << " degrees celsius" << endl;
+    cout << temp.getTempKelvin() << " degrees Kelvin" << endl;
+    cout << temp.getTempFahrenheit() << " degrees Fahrenheit" << endl;
+    cout << temp.getTempCelsius() << " degrees Celsius" << endl;
 
     cout << "---------------------------\n\n";
 
-    temp.setTempCelsius(-173.15);
+    temp.setTempFahrenheit(32);
 
-    cout << temp.getTempKelvin() << " degrees kelvin" << endl;
-    cout << temp.getTempFahrenheit() << " degrees fahrenheit" << endl;
-    cout << temp.getTempCelsius() << " degrees celsius" << endl;
+    cout << temp.getTempKelvin() << " degrees Kelvin" << endl;
+    cout << temp.getTempFahrenheit() << " degrees Fahrenheit" << endl;
+    cout << temp.getTempCelsius() << " degrees Celsius" << endl;
+
+    cout << "---------------------------\n\n";
+
+    temp.setTempCelsius(0);
+
+    cout << temp.getTempKelvin() << " degrees Kelvin" << endl;
+    cout << temp.getTempFahrenheit() << " degrees Fahrenheit" << endl;
+    cout << temp.getTempCelsius() << " degrees Celsius" << endl;
 
     return 0;
 }

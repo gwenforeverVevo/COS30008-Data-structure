@@ -1,7 +1,6 @@
 #pragma once
 
-class Temperature
-{
+class Temperature {
 private:
     double kelvin;
 
@@ -19,4 +18,3 @@ public:
     double getTempFahrenheit() const;
     double getTempCelsius() const;
 };
-
