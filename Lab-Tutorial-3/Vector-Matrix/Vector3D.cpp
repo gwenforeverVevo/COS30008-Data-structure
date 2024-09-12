@@ -1,5 +1,6 @@
 
 #include "Vector3D.h"
+#include <stdexcept>
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -11,10 +12,6 @@ Vector3D::Vector3D(float aX, float aY, float aW) noexcept
 
 Vector3D::Vector3D(const Vector2D &aVector) noexcept
     : fBaseVector(aVector), fW(1.0f) {}
-
-float Vector3D::x() const noexcept { return fBaseVector.x(); }
-float Vector3D::y() const noexcept { return fBaseVector.y(); }
-float Vector3D::w() const noexcept { return fW; }
 
 float Vector3D::operator[](size_t aIndex) const
 {
@@ -38,7 +35,7 @@ Vector3D::operator Vector2D() const noexcept
 
 Vector3D Vector3D::operator*(const float aScalar) const noexcept
 {
-    return Vector3D(fBaseVector.x() * scalar, fBaseVector.y * scalar, fW * scalar);
+    return Vector3D(fBaseVector.x() * aScalar, fBaseVector.y() * aScalar, fW * aScalar);
 }
 
 Vector3D Vector3D::operator+(const Vector3D &aOther) const noexcept
