@@ -12,7 +12,7 @@ public:
     JobBid() friend istream &operator(istream &, JobBid &);
     friend ostream &operator(ostream &, const JobBid &);
     bool operator<(const JobBid &)
-    =
+    
 };
 
 
