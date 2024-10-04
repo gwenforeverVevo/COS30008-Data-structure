@@ -39,10 +39,16 @@ bool SimpleForwardIterator::operator!=(const SimpleForwardIterator &aOther) cons
 
 SimpleForwardIterator SimpleForwardIterator::begin() const noexcept
 {
-    return SimpleForwardIterator(fCollection);
+    // return SimpleForwardIterator(fCollection);
+    SimpleForwardIterator copy =*this;
+    copy.fIndex = 0;    
+    return copy;
 }
 
 SimpleForwardIterator SimpleForwardIterator::end() const noexcept
 {
-    return SimpleForwardIterator(fCollection, fCollection->size());
+    // return SimpleForwardIterator(fCollection, fCollection->size());
+
+    copy.fIndex = fCollection->size();    
+    return copy;
 }
