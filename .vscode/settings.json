@@ -124,7 +124,9 @@
     "xlocnum": "cpp",
     "xloctime": "cpp",
     "xmemory": "cpp",
-    "xtr1common": "cpp"
+    "xtr1common": "cpp",
+    "iomanip": "cpp",
+    "sstream": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe"
