@@ -49,7 +49,8 @@ void FibonacciSequenceGenerator::next() noexcept
     temp = fPrevious + fCurrent;
     fPrevious = fCurrent;
     fCurrent = temp;
-    assert(fCurrent < fPrevious);
+    
+    assert(fCurrent >= fPrevious);
 }
 
 
