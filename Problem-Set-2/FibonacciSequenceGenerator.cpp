@@ -3,19 +3,21 @@
 #include <limits>
 #include <iostream>
 #include <string>
+#include <cstdint>
+
 using namespace std;
 
-FibonacciSequenceGenerator::FibonacciSequenceGenerator(const std::string &aID) noexcept
+FibonacciSequenceGenerator::FibonacciSequenceGenerator(const string &aID) noexcept
     : fID(aID), fPrevious(0), fCurrent(1)
 {
 
 }
-const string &FibonacciSequenceGenerator::id() const noexcept
+const string& FibonacciSequenceGenerator::id() const noexcept
 {
     return fID;
 }
 
-const long long &FibonacciSequenceGenerator::operator*() const
+const long long& FibonacciSequenceGenerator::operator*() const noexcept
 {
     return fCurrent;
 }
@@ -32,9 +34,9 @@ void FibonacciSequenceGenerator::reset() noexcept
 }
 
 bool FibonacciSequenceGenerator::hasNext() const noexcept
-{   int64_t tempHasNext = numeric_limits<int64_t>::max();
+{   //int64_t tempHasNext = 
     // temp = fPrevious + fCurrent;
-    if (tempHasNext - fPrevious >= fCurrent) 
+    if (numeric_limits<int64_t>::max();- fPrevious >= fCurrent) 
     {
         return true;
     }
