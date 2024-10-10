@@ -7,16 +7,24 @@
 #include <cstddef>
 
 class FibonacciSequenceGenerator
+
 {
 private:
     const std::string fID;  // sequence identifier
     long long fPrevious;    // previous Fibonacci number (initially 0)
     long long fCurrent;     // current Fibonacci number (initially 1)
+    
 
 public:
-    
+// int64_t currentValue;
+
+
+
     // Constructor to set up a Fibonacci sequence
-    FibonacciSequenceGenerator(const std::string& aID = "") noexcept;
+    FibonacciSequenceGenerator(const std::
+
+
+string& aID = "") noexcept;
 
     // Get sequence ID
     const std::string& id() const noexcept;
@@ -38,4 +46,13 @@ public:
     // Advance to next Fibonacci number
     // Function performs overflow assertion check.
     void next() noexcept;
+
+
+    // long long current() const noexcept { return fCurrent; }
+    // const int64_t& current() const noexcept {
+    //     return currentValue;
+    // }
+
+
+    
 };
