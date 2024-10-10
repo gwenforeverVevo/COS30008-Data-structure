@@ -45,12 +45,23 @@ bool FibonacciSequenceGenerator::hasNext() const noexcept
 
 void FibonacciSequenceGenerator::next() noexcept
 {
-    int64_t temp;   
-    temp = fPrevious + fCurrent;
+
+    //over for problem set 2
+    if(fCurrent >= numeric_limits<int64_t>::max() - fPrevious)  //overflow
+    {
+        cout << "Urm Overflow has occurred and the number has exceed the long threshold" << endl;
+        // return false;
+        assert(false);
+    }
+
+    int64_t tempOverflow;   
+    tempOverflow = fPrevious + fCurrent;
     fPrevious = fCurrent;
-    fCurrent = temp;
+    fCurrent = tempOverflow;
     
     assert(fCurrent >= fPrevious);
+
+
 }
 
 
