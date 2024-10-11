@@ -5,7 +5,7 @@
 #include <iomanip>
 
 #define P1
-//define P2
+//#define P2
 
 static size_t gCount = 0;
 constexpr long long MAX_FIBONACCI = 92;

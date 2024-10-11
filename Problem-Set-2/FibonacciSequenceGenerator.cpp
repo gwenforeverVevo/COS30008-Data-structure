@@ -18,12 +18,20 @@ const string &FibonacciSequenceGenerator::id() const noexcept
 
 const long long &FibonacciSequenceGenerator::operator*() const noexcept
 {
+    // if(fCurrent < 0)
+    //     {
+    //         return fCurrent;
+    //     }
     return fCurrent;
 }
 
 FibonacciSequenceGenerator::operator bool() const noexcept
 {
-    return fCurrent > 0;
+
+    // Checking if the current number is greater than 0
+    // return fCurrent > 0 && fCurrent <= numeric_limits<int64_t>::max();
+    // WHAT IS THE DIFFERENCE BETWEEN THIS AND THE ONE ABOVE
+    return hasNext();
 }
 
 void FibonacciSequenceGenerator::reset() noexcept
@@ -33,48 +41,26 @@ void FibonacciSequenceGenerator::reset() noexcept
 }
 
 bool FibonacciSequenceGenerator::hasNext() const noexcept
-{ // int64_t tempHasNext =
-    // temp = fPrevious + fCurrent;
-    // if (numeric_limits<int64_t>::max() -fPrevious >= fCurrent)
-    // {
-    //     return true;
-    // }
-    // if (fCurrent >= 0)
-    // {
-    //     return true;
-    // }
-    if(fCurrent <= numeric_limits<int64_t>::max())
+{
+    // Check for potential overflow before it happens
+    if (fCurrent > numeric_limits<int64_t>::max() - fPrevious)
     {
-        return true;
+        return false;
     }
-    return false;
+    return true;
 }
-
 void FibonacciSequenceGenerator::next() noexcept
 {
-    if (!hasNext())
+    // I HATE THIS FUNCTION
+    if(!hasNext())
     {
-       exit;
+        return;
     }
-
-    // Calculate the next Fibonacci number
-    long long next = fPrevious + fCurrent;
+    assert(hasNext());
+    // long long temp = fCurrent;
+    // fCurrent += fPrevious;
+    // fPrevious = temp;
+    long long tempNext = fCurrent + fPrevious;
     fPrevious = fCurrent;
-    fCurrent = next;
-    // over for problem set 2
-    // if (fCurrent >= numeric_limits<int64_t>::max() - fPrevious) // overflow
-    // {
-    //     // cout << "Urm Overflow has occurred and the number has exceed the long threshold" << endl;
-    //     // Fibonacci sequence generated successfully
-    //     cout << "Fibonacci sequence generated successfully" << endl;
-    //     // return false;
-    // }
-
-    // int64_t tempOverflow;
-    // tempOverflow = fPrevious + fCurrent;
-    // fPrevious = fCurrent;
-    // fCurrent = tempOverflow;
-    // assert(fCurrent >= fPrevious);
-    // assert(numeric_limits<int64_t>::max() -fPrevious >= fCurrent);
-    // assert(fCurrent >= numeric_limits<int64_t>::max() - fPrevious);
+    fCurrent = tempNext;
 }
