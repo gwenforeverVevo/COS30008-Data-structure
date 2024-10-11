@@ -17,6 +17,7 @@ const long long& FibonacciSequenceIterator::operator*() const noexcept
     // return fSequenceObject.id();
     // return fSequenceObject.current();
     // return fIndex.current();
+    // return *fSequenceObject;
     return fSequenceObject.operator*();
 }
 // FibonacciSequenceIterator& FibonacciSequenceIterator::operator++() noexcept
