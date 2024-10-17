@@ -1,66 +1,57 @@
 #include "FibonacciSequenceGenerator.h"
-#include <cassert>
-#include <limits>
-#include <iostream>
 #include <string>
-#include <cstdint>
+#include <cassert>
 
-using namespace std;
+FibonacciSequenceGenerator::FibonacciSequenceGenerator(const std::string &aID) noexcept
+    : fID(aID), fPrevious(0), fCurrent(1) {}
 
-FibonacciSequenceGenerator::FibonacciSequenceGenerator(const string &aID) noexcept
-    : fID(aID), fPrevious(0), fCurrent(1)
-{
-}
-const string &FibonacciSequenceGenerator::id() const noexcept
+// Get sequence ID
+const std::string &FibonacciSequenceGenerator::id() const noexcept
 {
     return fID;
 }
 
+// Get current Fibonacci number
 const long long &FibonacciSequenceGenerator::operator*() const noexcept
 {
-    // if(fCurrent < 0)
-    //     {
-    //         return fCurrent;
-    //     }
     return fCurrent;
 }
 
+// Type conversion to bool
 FibonacciSequenceGenerator::operator bool() const noexcept
 {
-
-    // Checking if the current number is greater than 0
-    // return fCurrent > 0 && fCurrent <= numeric_limits<int64_t>::max();
-    // WHAT IS THE DIFFERENCE BETWEEN THIS AND THE ONE ABOVE
-    return hasNext();
+    // Returns true if the next fibonacci number is not negative
+    if (hasNext())
+        return true;
+    return false;
 }
 
+// Reset sequence generator to first Fibonacci number
 void FibonacciSequenceGenerator::reset() noexcept
 {
-    fPrevious = 0;
-    fCurrent = 1;
+    // Reset to the initial values
+    fPrevious=0;
+    fCurrent=1;
 }
 
+// Check if it can be computed in 64 bit system without causing buffer overflow
 bool FibonacciSequenceGenerator::hasNext() const noexcept
 {
-    // Check for potential overflow before it happens
-    if (fCurrent > numeric_limits<int64_t>::max() - fPrevious)
-    {
-        return false;
-    }
-    return true;
+    // Maximum value a long long integer can have
+    long long maxValue  = 9223372036854775807;
+
+    // Subtract current integer value from the max value to find the remaining space left
+    // If remaining space is more than the value to be added (fPrevious), then the 'next' value can be computed in syste,
+    return (maxValue - fCurrent) >= fPrevious;
 }
+
+// Advance to next Fibonacci number, and perform overflow assertion check
 void FibonacciSequenceGenerator::next() noexcept
 {
-    // I HATE THIS FUNCTION
-    if(!hasNext())
-    {
-        return;
-    }
-    assert(hasNext());
-    // long long temp = fCurrent;
-    // fCurrent += fPrevious;
-    // fPrevious = temp;
-    long long tempNext = fCurrent + fPrevious;
+    // If evaluates to true, the code continues to execute, else the error message will be printed
+    assert(hasNext() && "Error: The next number in the Fibonacci Sequence will cause an overflow");
+
+    long long next = fCurrent + fPrevious;
     fPrevious = fCurrent;
-    fCurrent = tempNext;
+    fCurrent=next;
 }

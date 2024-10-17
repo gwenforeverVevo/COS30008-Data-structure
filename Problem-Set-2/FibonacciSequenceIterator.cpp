@@ -23,7 +23,7 @@ const long long &FibonacciSequenceIterator::operator*() const noexcept
     return fSequenceObject.operator*();
 }
 
-FibonacciSequenceIterator&FibonacciSequenceIterator::operator++() noexcept
+FibonacciSequenceIterator &FibonacciSequenceIterator::operator++() noexcept
 {
     // Check if there is a next Fibonacci number
     // if (!fSequenceObject.hasNext())
@@ -42,9 +42,19 @@ FibonacciSequenceIterator&FibonacciSequenceIterator::operator++() noexcept
 FibonacciSequenceIterator FibonacciSequenceIterator::operator++(int) noexcept
 {
     // postfix
-    FibonacciSequenceIterator tempPrefix = *this;
-    (*this)++;
-    return tempPrefix;
+    FibonacciSequenceIterator temp = *this;
+
+    if (fSequenceObject.hasNext())
+    {
+        fSequenceObject.next();
+        ++(*this); // use implemented prefix operator
+    }
+    else
+    {
+        fIndex = -1;
+    }
+
+    return temp; // Return the copy of the iterator before incrementing
     // fSequenceObject.next();
     // int64_t tempPre = fIndex;
     // fIndex++;
@@ -68,6 +78,6 @@ FibonacciSequenceIterator FibonacciSequenceIterator::begin() const noexcept
 
 FibonacciSequenceIterator FibonacciSequenceIterator::end() const noexcept
 {
-
-    return FibonacciSequenceIterator(fSequenceObject,93);
+    FibonacciSequenceGenerator endSequence = fSequenceObject;
+    return FibonacciSequenceIterator(fSequenceObject, -1);
 }
