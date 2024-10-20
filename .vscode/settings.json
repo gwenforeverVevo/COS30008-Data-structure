@@ -129,5 +129,7 @@
     "sstream": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled",
-  "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe"
+  "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+  "github.copilot.advanced": {},
+  "github.copilot.editor.enableAutoCompletions": false
 }
