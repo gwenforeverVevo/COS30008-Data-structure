@@ -15,6 +15,7 @@ void insert(Node*& head, int value) {
         return;
     }
     insert(head->next, value);
+    
 }
 
 // Recursive function to display the list
