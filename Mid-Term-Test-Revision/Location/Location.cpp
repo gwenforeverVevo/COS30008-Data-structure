@@ -3,6 +3,7 @@
 #include <string>
 
 using namespace std;
+Location::Location(){}
 
 Location::Location(const string aId, const string aName) : fId(aId), fName(aName)
 {

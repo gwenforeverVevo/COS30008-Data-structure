@@ -11,16 +11,7 @@ const int SIZE = 10;
 int main()
 {
     // Question 1
-    int array[SIZE] = {10,
-                       8,
-                       35,
-                       12,
-                       3,
-                       57,
-                       19,
-                       22,
-                       64,
-                       9};
+    int array[SIZE] = {10,8,35,12,3,57,19,22,64,9};
 
     // Question 2
     auto calAverage = [array] -> int
@@ -33,8 +24,8 @@ int main()
         return average;
     }
 
-                                 // QUestion 3
-                                 auto getMaximum = [array] -> int
+    // QUestion 3
+    auto getMaximum = [array] -> int
     {
         max = 0;
         for (i = 0; i < SIZE; i++)
@@ -46,8 +37,8 @@ int main()
         }
         return max;
     }
-                                                              // Question 4
-                                                              auto checkValue = [array](int value) -> int
+    // Question 4
+    auto checkValue = [array](int value) -> int
     {
         for (i = 0; i < SIZE; i++)
         {
@@ -77,9 +68,10 @@ int main()
 
     return 0;
 
-    //Question
+    // Question
 
-    void displayResult(function myLambda, string message){
+    void displayResult(function myLambda, string message)
+    {
         cout << message << myLambda() << endl;
     }
 }
