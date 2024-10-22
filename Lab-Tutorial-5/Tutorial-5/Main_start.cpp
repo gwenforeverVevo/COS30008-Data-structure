@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cassert>
 
-//#define P1
+#define P1
 //#define P2
 //#define P3
 

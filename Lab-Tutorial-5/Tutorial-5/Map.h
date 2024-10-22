@@ -5,7 +5,7 @@
 
 #include <istream>
 #include <ostream>
-
+using namespace std;
 template<typename Key, typename Value>
 class Map
 {
