@@ -9,6 +9,7 @@ class Company
 private:
     std::string companyName;
     std::vector<Job> jobListings;
+    // JOb* Joblisting
 
 public:
     // Constructor
@@ -16,6 +17,7 @@ public:
 
     // Add a job to the listing
     void addJob(const Job &job);
+    
 
     // Display all jobs
     void displayJobs() const;
