@@ -65,4 +65,5 @@ JobListing &JobListing::operator-(const Job& aJob)
              break;;  // Exit the loop once the job is removed
         }
     }
+    return *this;
 }
