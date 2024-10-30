@@ -44,7 +44,7 @@ bool ifstream12::good() const
 bool ifstream12::eof() const
 {
     // Check that the stream is exhausted: file EOF, no bytes left, and no remaining bits
-    return fIStream.eof() && fByteIndex >= fByteCount && fBitIndex == 7; // Stream fully exhausted when all bits read
+    return fIStream.eof() && fByteIndex >= fByteCount && fBitIndex == 7; // Fully exhausted when all bits are read
 }
 
 void ifstream12::reset()
