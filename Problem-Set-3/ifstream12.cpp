@@ -1,24 +1,15 @@
 #include "ifstream12.h"
 #include <cassert>
+#include <iostream> // For debug output
 
-using namespace std;
-
-void ifstream12::reset()
+ifstream12::ifstream12(const char* aFileName, size_t aBufferSize) :
+    fBuffer(new std::byte[aBufferSize]), fBufferSize(aBufferSize),
+    fByteCount(0), fByteIndex(0), fBitIndex(-1)
 {
-    for (size_t i = 0; i < fBufferSize; i++)
-        fBuffer[i] &= std::byte{0};
-    fByteIndex = 0;
-    fBitIndex = 7;
-}
-
-ifstream12::ifstream12(const char *aFileName, size_t aBufferSize) : fBuffer(new std::byte[aBufferSize]),
-                                                                    fBufferSize(aBufferSize),
-                                                                    fByteCount(0),
-                                                                    fByteIndex(0),
-                                                                    fBitIndex(7)
-{
-    reset();
-    open(aFileName);
+    if (aFileName)
+    {
+        open(aFileName);
+    }
 }
 
 ifstream12::~ifstream12()
@@ -27,18 +18,16 @@ ifstream12::~ifstream12()
     delete[] fBuffer;
 }
 
-void ifstream12::open(const char *aFileName)
+void ifstream12::open(const char* aFileName)
 {
-    assert(!isOpen());
-    if (aFileName)
-    {
-        fIStream.open(aFileName, ifstream::binary);
-        fetch_data();
-    }
+    fIStream.open(aFileName, std::ifstream::binary);
+    assert(fIStream.is_open());
+    std::cout << "Opened file: " << aFileName << std::endl; // Debug
 }
 
 void ifstream12::close()
 {
+    std::cout << "Closing file." << std::endl; // Debug
     fIStream.close();
 }
 
@@ -54,55 +43,85 @@ bool ifstream12::good() const
 
 bool ifstream12::eof() const
 {
-    // The stream must be at the end, and we must have processed all bytes and bits
-    return fIStream.eof() && (fByteIndex >= fByteCount) && (fBitIndex == 7);
+    // Check that the stream is exhausted: file EOF, no bytes left, and no remaining bits
+    return fIStream.eof() && fByteIndex >= fByteCount && fBitIndex == 7; // Stream fully exhausted when all bits read
+}
+
+void ifstream12::reset()
+{
+    fByteIndex = 0;
+    fBitIndex = 7; // Start at the highest bit of the byte
 }
 
 void ifstream12::fetch_data()
 {
-    if (fIStream.good())
+    if (fByteCount == 0) // Fetch data only if no bytes are left
     {
-        fIStream.read(reinterpret_cast<char *>(fBuffer), fBufferSize);
-        fByteCount = fIStream.gcount();
-        fByteIndex = 0;
-        fBitIndex = 7;
+        fIStream.read(reinterpret_cast<char*>(fBuffer), fBufferSize);
+        fByteCount = fIStream.gcount(); // update byte count with number of bytes read
+        reset();
+        std::cout << "Fetched " << fByteCount << " bytes of data into buffer." << std::endl; // Debug
     }
 }
 
 std::optional<size_t> ifstream12::readBit()
 {
-    if (fByteIndex >= fByteCount)
+    if (fByteCount == 0) // Fetch data if necessary
     {
         fetch_data();
-        if (fByteIndex >= fByteCount)
+        if (fByteCount == 0)
         {
-            return std::nullopt;
+            return std::nullopt; // No more data to read
         }
     }
 
-    size_t bit = (static_cast<size_t>(fBuffer[fByteIndex]) >> fBitIndex) & 1;
-    fBitIndex--;
+    // Convert the byte to an integer type before performing the bitwise operation
+    size_t currentByte = std::to_integer<size_t>(fBuffer[fByteIndex]);
+    size_t bitValue = (currentByte & (1 << fBitIndex)) ? 1 : 0;  // Perform the bitwise operation on integer
 
-    if (fBitIndex < 0)
+    fBitIndex--;
+    if (fBitIndex < 0) // Move to the next byte when all bits of the current byte are read
     {
-        fByteIndex++;
         fBitIndex = 7;
+        fByteIndex++;
+        fByteCount--;
+
+        std::cout << "Moved to next byte. Byte index: " << fByteIndex << ", bits remaining: " << fByteCount << std::endl; // Debug
+
+        // Check if we need to fetch more data, but only if there are still remaining bytes
+        if (fByteCount == 0 && !fIStream.eof())
+        {
+            fetch_data();
+        }
     }
 
-    return bit;
+    return bitValue;
 }
 
-ifstream12 &ifstream12::operator>>(size_t &aValue)
+ifstream12& ifstream12::operator>>(size_t& aValue)
 {
     aValue = 0;
-    for (size_t i = 0; i < 12; i++)
+
+    for (int i = 0; i < 12; i++) // Read 12 bits
     {
         auto bit = readBit();
-        if (!bit.has_value())
+        if (!bit.has_value()) 
         {
-            break;
+            std::cout << "Reached EOF while reading bits." << std::endl;
+            break; // Stop if EOF is reached
         }
-        aValue |= (bit.value() << i);
+        aValue |= (bit.value() << i); // Shift the bit into the correct position
     }
+
+    std::cout << "Read 12-bit value: " << aValue << std::endl; // Debug
     return *this;
+}
+
+bool ifstream12::isExhausted() const
+{
+    // Check if all bits and bytes are fully read, including any remaining bits in the last byte
+    bool allBitsConsumed = (fBitIndex == 7); // No remaining bits in the last byte
+    bool allBytesRead = (fByteIndex >= fByteCount); // No remaining bytes in the buffer
+
+    return fIStream.eof() && allBytesRead && allBitsConsumed;
 }
