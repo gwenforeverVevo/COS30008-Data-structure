@@ -31,5 +31,5 @@ public:
     ifstream12& operator>>(size_t& aValue);
 
     // Declaration for isExhausted() method
-    bool isExhausted() const;
+    // bool isExhausted() const;
 };
