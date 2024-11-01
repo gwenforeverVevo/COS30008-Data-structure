@@ -22,12 +22,12 @@ void ifstream12::open(const char* aFileName)
 {
     fIStream.open(aFileName, std::ifstream::binary);
     assert(fIStream.is_open());
-    std::cout << "Opened file: " << aFileName << std::endl; // Debug
+    // std::cout << "Opened file: " << aFileName << std::endl; // Debug
 }
 
 void ifstream12::close()
 {
-    std::cout << "Closing file." << std::endl; // Debug
+    // std::cout << "Closing file." << std::endl; // Debug
     fIStream.close();
 }
 
@@ -60,7 +60,7 @@ void ifstream12::fetch_data()
         fIStream.read(reinterpret_cast<char*>(fBuffer), fBufferSize);
         fByteCount = fIStream.gcount(); // update byte count with number of bytes read
         reset();
-        std::cout << "Fetched " << fByteCount << " bytes of data into buffer." << std::endl; // Debug
+        // std::cout << "Fetched " << fByteCount << " bytes of data into buffer." << std::endl; // Debug
     }
 }
 
@@ -86,7 +86,7 @@ std::optional<size_t> ifstream12::readBit()
         fByteIndex++;
         fByteCount--;
 
-        std::cout << "Moved to next byte. Byte index: " << fByteIndex << ", bits remaining: " << fByteCount << std::endl; // Debug
+        // std::cout << "Moved to next byte. Byte index: " << fByteIndex << ", bits remaining: " << fByteCount << std::endl; // Debug
 
         // Check if we need to fetch more data, but only if there are still remaining bytes
         if (fByteCount == 0 && !fIStream.eof())
@@ -107,21 +107,12 @@ ifstream12& ifstream12::operator>>(size_t& aValue)
         auto bit = readBit();
         if (!bit.has_value()) 
         {
-            std::cout << "Reached EOF while reading bits." << std::endl;
+            // std::cout << "Reached EOF while reading bits." << std::endl;
             break; // Stop if EOF is reached
         }
         aValue |= (bit.value() << i); // Shift the bit into the correct position
     }
 
-    std::cout << "Read 12-bit value: " << aValue << std::endl; // Debug
+    // std::cout << "Read 12-bit value: " << aValue << std::endl; // Debug
     return *this;
-}
-
-bool ifstream12::isExhausted() const
-{
-    // Check if all bits and bytes are fully read, including any remaining bits in the last byte
-    bool allBitsConsumed = (fBitIndex == 7); // No remaining bits in the last byte
-    bool allBytesRead = (fByteIndex >= fByteCount); // No remaining bytes in the buffer
-
-    return fIStream.eof() && allBytesRead && allBitsConsumed;
 }
