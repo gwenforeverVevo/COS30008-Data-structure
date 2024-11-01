@@ -60,9 +60,10 @@ JobListing &JobListing::operator-(const Job& aJob)
         if (fJobList[i] == aJob)
         {
             // Replace the job at index i with the last job in the list
-            JobListing[i] = JobListing[fTotalList - 1];
+            fJobList[i] = fJobList[fTotalList - 1];
             fTotalList--;
              break;;  // Exit the loop once the job is removed
         }
     }
+    return *this;
 }
