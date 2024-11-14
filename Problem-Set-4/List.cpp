@@ -1,173 +1,162 @@
-#include "List.h"
-#include <stdexcept>  // for std::out_of_range
+#pragma once
+#include "DoublyLinkedList.h"
+#include "DoublyLinkedListIterator.h"
+#include <utility>
 
-// Constructor: Initializes an empty list
-template <typename T>
-List<T>::List() noexcept : fHead(nullptr), fTail(nullptr), fSize(0) {}
+template<typename T>
+class List
+{
+private:
+    using Node = typename DoublyLinkedList<T>::Node;
+    Node fHead; // first element
+    Node fTail; // last element
+    size_t fSize; // number of elements
 
-// Copy constructor
-template <typename T>
-List<T>::List(const List& aOther) : fHead(nullptr), fTail(nullptr), fSize(0) {
-    for (const auto& item : aOther) {
-        push_back(item);
+public:
+    using Iterator = DoublyLinkedListIterator<T>;
+
+    List() noexcept : fHead(nullptr), fTail(nullptr), fSize(0) {} // default constructor
+
+    // Copy constructor
+    List(const List& aOther) : fHead(nullptr), fTail(nullptr), fSize(0) {
+        Node current = aOther.fHead;
+        while (current) {
+            push_back(current->fData);
+            current = current->fNext;
+        }
     }
-}
 
-// Copy assignment
-template <typename T>
-List<T>& List<T>::operator=(const List& aOther) {
-    if (this != &aOther) {
-        List temp(aOther);
-        swap(temp);
+    // Copy assignment operator
+    List& operator=(const List& aOther) {
+        if (this != &aOther) {
+            List temp(aOther);
+            swap(temp);
+        }
+        return *this;
     }
-    return *this;
-}
 
-// Move constructor
-template <typename T>
-List<T>::List(List&& aOther) noexcept : fHead(aOther.fHead), fTail(aOther.fTail), fSize(aOther.fSize) {
-    aOther.fHead = nullptr;
-    aOther.fTail = nullptr;
-    aOther.fSize = 0;
-}
-
-// Move assignment
-template <typename T>
-List<T>& List<T>::operator=(List&& aOther) noexcept {
-    if (this != &aOther) {
-        swap(aOther);
+    // Move constructor
+    List(List&& aOther) noexcept : fHead(std::move(aOther.fHead)), fTail(std::move(aOther.fTail)), fSize(aOther.fSize) {
         aOther.fHead = nullptr;
         aOther.fTail = nullptr;
         aOther.fSize = 0;
     }
-    return *this;
-}
 
-// Swap function
-template <typename T>
-void List<T>::swap(List& aOther) noexcept {
-    std::swap(fHead, aOther.fHead);
-    std::swap(fTail, aOther.fTail);
-    std::swap(fSize, aOther.fSize);
-}
-
-// Returns the size of the list
-template <typename T>
-size_t List<T>::size() const noexcept {
-    return fSize;
-}
-
-// Adds an element at the front of the list (general template)
-template <typename T>
-template <typename U>
-void List<T>::push_front(U&& aData) {
-    Node newNode = DoublyLinkedList<T>::makeNode(std::forward<U>(aData));
-    if (!fHead) {
-        fHead = fTail = newNode; // List is empty
-    } else {
-        newNode->fNext = fHead;
-        fHead->fPrevious = newNode;
-        fHead = newNode;
-    }
-    fSize++;
-}
-
-// Adds an element at the front of the list (overload for const std::string&)
-void List<std::string>::push_front(const std::string& aData) {
-    Node newNode = DoublyLinkedList<std::string>::makeNode(aData);
-    if (!fHead) {
-        fHead = fTail = newNode;
-    } else {
-        newNode->fNext = fHead;
-        fHead->fPrevious = newNode;
-        fHead = newNode;
-    }
-    fSize++;
-}
-
-// Adds an element at the back of the list (general template)
-template <typename T>
-template <typename U>
-void List<T>::push_back(U&& aData) {
-    Node newNode = DoublyLinkedList<T>::makeNode(std::forward<U>(aData));
-    if (!fTail) {
-        fHead = fTail = newNode; // List is empty
-    } else {
-        newNode->fPrevious = fTail;
-        fTail->fNext = newNode;
-        fTail = newNode;
-    }
-    fSize++;
-}
-
-// Adds an element at the back of the list (overload for const std::string&)
-void List<std::string>::push_back(const std::string& aData) {
-    Node newNode = DoublyLinkedList<std::string>::makeNode(aData);
-    if (!fTail) {
-        fHead = fTail = newNode;
-    } else {
-        newNode->fPrevious = fTail;
-        fTail->fNext = newNode;
-        fTail = newNode;
-    }
-    fSize++;
-}
-
-// Removes the first occurrence of a given element
-template <typename T>
-void List<T>::remove(const T& aElement) noexcept {
-    Node current = fHead;
-    while (current) {
-        if (current->fData == aElement) {
-            if (current == fHead) {
-                fHead = current->fNext;
-                if (fHead) fHead->fPrevious.reset();
-            }
-            if (current == fTail) {
-                fTail = current->fPrevious.lock();
-                if (fTail) fTail->fNext.reset();
-            }
-            current->isolate();
-            fSize--;
-            return;
+    // Move assignment operator
+    List& operator=(List&& aOther) noexcept {
+        if (this != &aOther) {
+            // Transfer ownership of the elements
+            fHead = std::move(aOther.fHead);
+            fTail = std::move(aOther.fTail);
+            fSize = aOther.fSize;
+            // Reset aOther
+            aOther.fHead = nullptr;
+            aOther.fTail = nullptr;
+            aOther.fSize = 0;
         }
-        current = current->fNext;
+        return *this;
     }
-}
 
-// Accesses an element by index
-template <typename T>
-const T& List<T>::operator[](size_t aIndex) const {
-    if (aIndex >= fSize) {
-        throw std::out_of_range("Index out of range");
+    // Swap elements
+    void swap(List& aOther) noexcept {
+        std::swap(fHead, aOther.fHead);
+        std::swap(fTail, aOther.fTail);
+        std::swap(fSize, aOther.fSize);
     }
-    Node current = fHead;
-    for (size_t i = 0; i < aIndex; ++i) {
-        current = current->fNext;
+
+    // List size
+    size_t size() const noexcept {
+        return fSize;
     }
-    return current->fData;
-}
 
-// Iterator functions
-template <typename T>
-typename List<T>::Iterator List<T>::begin() const noexcept {
-    return Iterator(fHead, fTail);
-}
+    // Add element at front
+    template<typename U>
+    void push_front(U&& aData) {
+        Node newNode = DoublyLinkedList<T>::makeNode(std::forward<U>(aData));
+        newNode->fNext = fHead;
+        if (fHead) {
+            fHead->fPrevious = newNode;
+        }
+        else {
+            fTail = newNode; // list was empty
+        }
+        fHead = newNode;
+        ++fSize;
+    }
 
-template <typename T>
-typename List<T>::Iterator List<T>::end() const noexcept {
-    return Iterator(nullptr, fTail);
-}
+    // Add element at back
+    template<typename U>
+    void push_back(U&& aData) {
+        Node newNode = DoublyLinkedList<T>::makeNode(std::forward<U>(aData));
+        newNode->fPrevious = fTail;
+        if (fTail) {
+            fTail->fNext = newNode;
+        }
+        else {
+            fHead = newNode; // list was empty
+        }
+        fTail = newNode;
+        ++fSize;
+    }
 
-template <typename T>
-typename List<T>::Iterator List<T>::rbegin() const noexcept {
-    return Iterator(fTail, fHead);
-}
+    // Remove element
+    void remove(const T& aElement) noexcept {
+        Node current = fHead;
+        while (current) {
+            if (current->fData == aElement) {
+                if (current == fHead) {
+                    fHead = current->fNext;
+                    if (fHead) {
+                        fHead->fPrevious.reset();
+                    }
+                    else {
+                        fTail = nullptr; // list is now empty
+                    }
+                }
+                else if (current == fTail) {
+                    fTail = current->fPrevious.lock();
+                    if (fTail) {
+                        fTail->fNext = nullptr;
+                    }
+                    else {
+                        fHead = nullptr; // list is now empty
+                    }
+                }
+                else {
+                    current->fPrevious.lock()->fNext = current->fNext;
+                    current->fNext->fPrevious = current->fPrevious;
+                }
+                --fSize;
+                current->isolate();
+                return;
+            }
+            current = current->fNext;
+        }
+    }
 
-template <typename T>
-typename List<T>::Iterator List<T>::rend() const noexcept {
-    return Iterator(fHead, nullptr);
-}
+    // List indexer
+    const T& operator[](size_t aIndex) const {
+        Node current = fHead;
+        for (size_t i = 0; i < aIndex; ++i) {
+            current = current->fNext;
+        }
+        return current->fData;
+    }
 
-// Explicit instantiation for List<std::string>
-template class List<std::string>;
+    // Iterator interface
+    Iterator begin() const noexcept {
+        return Iterator(fHead, fTail).begin();
+    }
+
+    Iterator end() const noexcept {
+        return Iterator(fHead, fTail).end();
+    }
+
+    Iterator rbegin() const noexcept {
+        return Iterator(fHead, fTail).rbegin();
+    }
+
+    Iterator rend() const noexcept {
+        return Iterator(fHead, fTail).rend();
+    }
+};
