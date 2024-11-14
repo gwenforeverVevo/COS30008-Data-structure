@@ -57,11 +57,11 @@ size_t List<T>::size() const noexcept {
     return fSize;
 }
 
-// Adds an element at the front of the list
+// Adds an element at the front of the list (general template)
 template <typename T>
 template <typename U>
 void List<T>::push_front(U&& aData) {
-    Node newNode = Node::makeNode(std::forward<U>(aData));
+    Node newNode = DoublyLinkedList<T>::makeNode(std::forward<U>(aData));
     if (!fHead) {
         fHead = fTail = newNode; // List is empty
     } else {
@@ -72,13 +72,39 @@ void List<T>::push_front(U&& aData) {
     fSize++;
 }
 
-// Adds an element at the back of the list
+// Adds an element at the front of the list (overload for const std::string&)
+void List<std::string>::push_front(const std::string& aData) {
+    Node newNode = DoublyLinkedList<std::string>::makeNode(aData);
+    if (!fHead) {
+        fHead = fTail = newNode;
+    } else {
+        newNode->fNext = fHead;
+        fHead->fPrevious = newNode;
+        fHead = newNode;
+    }
+    fSize++;
+}
+
+// Adds an element at the back of the list (general template)
 template <typename T>
 template <typename U>
 void List<T>::push_back(U&& aData) {
-    Node newNode = Node::makeNode(std::forward<U>(aData));
+    Node newNode = DoublyLinkedList<T>::makeNode(std::forward<U>(aData));
     if (!fTail) {
         fHead = fTail = newNode; // List is empty
+    } else {
+        newNode->fPrevious = fTail;
+        fTail->fNext = newNode;
+        fTail = newNode;
+    }
+    fSize++;
+}
+
+// Adds an element at the back of the list (overload for const std::string&)
+void List<std::string>::push_back(const std::string& aData) {
+    Node newNode = DoublyLinkedList<std::string>::makeNode(aData);
+    if (!fTail) {
+        fHead = fTail = newNode;
     } else {
         newNode->fPrevious = fTail;
         fTail->fNext = newNode;
