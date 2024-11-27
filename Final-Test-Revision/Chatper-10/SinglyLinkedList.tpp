@@ -214,3 +214,4 @@ typename SinglyLinkedList<T>::Iterator SinglyLinkedList<T>::begin() const
 template <typename T>
 typename SinglyLinkedList<T>::Iterator SinglyLinkedList<T>::end() const
 {
+}
